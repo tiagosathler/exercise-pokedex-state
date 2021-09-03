@@ -36,8 +36,8 @@ class Pokedex extends React.Component {
 
   nextPokemon(pokemons) {
     if (this.state.index !== pokemons.length - 1) {
-      this.setState((previousState, _props) => ({
-        index: previousState.index + 1,
+      this.setState(({ index: prevIndex }, _props) => ({
+        index: prevIndex + 1,
       }));
     } else {
       this.setState({
