@@ -3,52 +3,39 @@ import Pokemon from "./Pokemon";
 
 class Pokedex extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     const { pokemons } = this.props;
     this.state = {
       index: 0,
-      fireBtnStyle: {
-        backgroundColor: '#e6e2d3'
-      },
-      psychicBtnStyle: {
-        backgroundColor: '#e6e2d3'
-      },
-      // pokemonsFiltered: pokemons.filter(({type}) => type === 'Fire'),
+      id: "All",
       pokemonsFiltered: pokemons,
-    }
-    this.nextPokemon = this.nextPokemon.bind(this);
-    this.fireSelected = this.fireSelected.bind(this);
-    this.psychicSelected = this.psychicSelected.bind(this);    
+    };
+    this.selectFilter = this.selectFilter.bind(this);
   }
-  
-  fireSelected(pokemons) {
-    this.setState({
-      pokemonsFiltered: pokemons.filter(({type}) => type === 'Fire'),
-      fireBtnStyle: {
-        backgroundColor: '#eca1a6'
-      },
-      psychicBtnStyle: {
-        backgroundColor: '#e6e2d3'
-      },
-      index: 0,
-    });
-  };
 
-  psychicSelected(pokemons) {
-    this.setState({
-      pokemonsFiltered: pokemons.filter(({type}) => type === 'Psychic'),
-      fireBtnStyle: {
-        backgroundColor: '#e6e2d3'
-      },
-      psychicBtnStyle: {
-        backgroundColor: '#eca1a6'
-      },
-      index: 0,
+  selectFilter(event, pokemons) {
+    const currId = event.target.id;
+    let array = pokemons;
+    this.setState(({ id: prevId }, _props) => {
+      if (currId !== "All") {
+        array = pokemons.filter(({ type }) => type === currId);
+        const currBtn = document.getElementById(currId);
+        currBtn.classList.add("selected");
+      }
+      if (prevId !== "All") {
+        const prevBtn = document.getElementById(prevId);
+        prevBtn.classList.remove("selected");
+      }
+      return {
+        index: 0,
+        id: currId,
+        pokemonsFiltered: array,
+      };
     });
   }
 
   nextPokemon(pokemons) {
-    if (this.state.index !== pokemons.length - 1  ) {
+    if (this.state.index !== pokemons.length - 1) {
       this.setState((previousState, _props) => ({
         index: previousState.index + 1,
       }));
@@ -57,34 +44,50 @@ class Pokedex extends React.Component {
         index: 0,
       });
     }
-  };
+  }
 
   render() {
     const { pokemons } = this.props;
-    const { index, fireBtnStyle, psychicBtnStyle, pokemonsFiltered} = this.state;
-    
+    const { index, pokemonsFiltered } = this.state;
+
+    const types = pokemons.reduce(
+      (acc, { type }) => {
+        if (!acc.includes(type)) {
+          acc.push(type);
+        }
+        return acc;
+      },
+      ["All"]
+    );
+
     return (
       <section>
         <div>
-          <button onClick={() => this.nextPokemon(pokemonsFiltered)}>Next</button>
-          <button 
-            style={fireBtnStyle } 
-            onClick={() => this.fireSelected(pokemons)}>
-            Fire
-          </button>
-          <button
-            style={psychicBtnStyle}
-            onClick={() => this.psychicSelected(pokemons)}>
-            Psychic</button>
+          {types.map((type) => (
+            <button
+              id={type}
+              key={type}
+              onClick={(event) => this.selectFilter(event, pokemons)}
+            >
+              {type}
+            </button>
+          ))}
         </div>
         <div className="pokedex">
-          <Pokemon 
+          <Pokemon
             key={pokemonsFiltered[index].id}
-            pokemon={pokemonsFiltered[index]} />
+            pokemon={pokemonsFiltered[index]}
+          />
         </div>
+        <button
+          onClick={() => this.nextPokemon(pokemonsFiltered)}
+          disabled={pokemonsFiltered.length === 1}
+        >
+          Next
+        </button>
       </section>
     );
-  };
-};
+  }
+}
 
 export default Pokedex;
