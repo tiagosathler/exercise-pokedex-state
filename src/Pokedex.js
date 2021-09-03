@@ -1,5 +1,6 @@
 import React from "react";
 import Pokemon from "./Pokemon";
+import Button from "./Button";
 
 class Pokedex extends React.Component {
   constructor(props) {
