@@ -14,12 +14,23 @@ body {
   flex: 1 1 auto;
   min-width: 25%;
   margin: 10px 10px;
-  border: 1px gray solid;
+  border: 2px gray solid;
   border-radius: 10px;
+  background-color: #9dc5c3;
+  background-image: linear-gradient(315deg, #9dc5c3 0%, #5e5c5c 74%);
+  color: white;
+  text-shadow: 0 0 3px black;
 }
 
 .pokedex {
   display: flex;
   flex-wrap: wrap;
-  margin: 10px 10px;
+  align-items: center;
+  justify-items: center;
+  margin: auto;
+  width: 40%;  
+}
+
+.selected {
+  background-color:burlywood;
 }
