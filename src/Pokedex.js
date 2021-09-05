@@ -1,6 +1,7 @@
 import React from "react";
-import Pokemon from "./Pokemon";
-import Button from "./Button";
+import Pokemon from "./components/Pokemon";
+import Button from "./components/Button";
+
 
 class Pokedex extends React.Component {
   constructor(props) {
@@ -11,11 +12,12 @@ class Pokedex extends React.Component {
       id: "All",
       pokemonsFiltered: pokemons,
     };
-    this.selectFilter = this.selectFilter.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
 
-  selectFilter(event, pokemons) {
-    const currId = event.target.id;
+  handleFilter({target}, pokemons) {
+    const currId = target.id;    
     let array = pokemons;
     this.setState(({ id: prevId }, _props) => {
       if (currId !== "All") {
@@ -35,7 +37,7 @@ class Pokedex extends React.Component {
     });
   }
 
-  nextPokemon(pokemons) {
+  handleNext(event, pokemons) {
     if (this.state.index !== pokemons.length - 1) {
       this.setState(({ index: prevIndex }, _props) => ({
         index: prevIndex + 1,
@@ -65,13 +67,11 @@ class Pokedex extends React.Component {
       <section>
         <div>
           {types.map((type) => (
-            <button
-              id={type}
-              key={type}
-              onClick={(event) => this.selectFilter(event, pokemons)}
-            >
-              {type}
-            </button>
+            <Button
+              type={type}              
+              pokemons={pokemons}
+              eventListener={this.handleFilter}
+            />
           ))}
         </div>
         <div className="pokedex">
@@ -80,12 +80,11 @@ class Pokedex extends React.Component {
             pokemon={pokemonsFiltered[index]}
           />
         </div>
-        <button
-          onClick={() => this.nextPokemon(pokemonsFiltered)}
-          disabled={pokemonsFiltered.length === 1}
-        >
-          Next
-        </button>
+        <Button
+          type="Next"          
+          pokemons={pokemonsFiltered}
+          eventListener={this.handleNext}          
+        />
       </section>
     );
   }
